@@ -1,0 +1,140 @@
+----------------------------------------------------------------------
+enable 
+configure terminal
+hostename sw-01
+service password-encryption
+no ip domain-lookut
+banner  motd #AVISO: acesso autorizado somente para funcionarios#
+enable secret 123@senac
+username senac secret 123@senac 
+username tatuape password 123@senac 
+line console 0
+login local
+logging synchronous
+password 123@senac 
+exec-timeout 5 30
+exit
+exit 
+copy running-config atartup-config
+disable
+exit
+
+
+
+!!!!!!!anotações completas!!!!!!!
+
+enable 
+hostname rt-02
+service passaword-encryption
+no ip-domain-lookup
+banner motd #AVISO: acesso autorizado somente para funcionarios#
+enable secret 123@senac 
+username senac secret 123@senac
+username tatuape password 123@senac
+ip domain-name senac.tat
+crypto key-generate rsa general-keys modulus 1024
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-restries 2
+line console 0
+login local
+password 123@senac 
+loggin synchronous
+exec-timeout 5 30
+exit
+line vty 0 4 
+login local
+password 123@senac
+loggin synchronous
+exec-timeout 5 30
+transport input all
+exit
+
+interface gigabitEthernet 0/0
+descripiton interface de gatewayda rede LAN
+ip address 192.168.1.254.    255.255.255.0
+no shutdown
+end
+
+write
+
+---------------------------------------------------------------------------
+
+
+     CLASSES DE IPv4 ( INDEREÇOS IP )
+
+classe A  0000 - 127.255.255.255       *  NAO USAR IP Q COMEÇE COM 127X
+classe B  128 000 - 191.255.255.255    *  NAO USAR IP Q COMEÇE COM 169X
+classe C  192 000 - 223.255.255.255
+classe D  224 000 - 239.255.255.255
+classe E  240 000 - 247.255.255.255
+
+----------------------------------------------------------------------------
+
+           CLASSE DE IPv4 
+	    IMPORTANTE ( PRIVADAS )               *        MASCARA  PADRAO
+		                                      *
+classe A         10.000 -  10.255.255.255     *         255.0.0.0    /8
+classe B     172.16.0.0 - 172.31.255.2555     *       255.255.0.0    /16
+classe C    192.168.0.0 - 255.255.255.255     *     255.255.255.0    /24
+ 
+----------------------------------------------------------------------------
+ 
+ 
+ router 2911 (direita)
+ 
+ enable
+      configure terminal
+      interface gigabitEthernet 0/1
+      descripiton interface de WAN
+      ip address 10.0.0.2 255.255.255.252
+      no shutdown
+      end
+ weite
+ 
+ router 1941 (esquerda)
+ 
+  enable
+       configure terminal
+       interface gigabitEthernet 0/1
+       descripiton interface de WAN
+       ip address 10.0.0.1 255.255.255.252
+       no shutdown
+       end
+ weite
+ 
+------------------------------------------------------------------------------
+show ip interface brief
+------------------------------------------------------------------------------
+
+router 2911 (direita)
+
+enable
+configure terminal
+ip route 192.168.0.0  255.255.255.0  10.0.0.2
+end
+write
+
+router 1941 (esquerda)
+
+enable
+configure terminal
+ip route 192.168.0.0  255.255.255.0  10.0.0.2
+end
+write
+
+--------------------------------------------------------------------------------
+
+router 2911 (direita)
+
+
+show ip interface brief
+show ip route static 
+ping 192.168.0.254
+ping 10.0.0.1
+ping 10.0.0.2
+ping 192.168.1.254
+ping 192.168.1.10
+
+---------------------------------------------------------------------------------
+
